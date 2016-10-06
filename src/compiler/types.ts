@@ -3060,6 +3060,8 @@ namespace ts {
          * - don't use tripleslash references
          */
         isExternalLibraryImport?: boolean;
+        //doc
+        isPackageJson?: boolean;
     }
 
     export interface ResolvedModuleWithFailedLookupLocations {

@@ -1344,7 +1344,14 @@ namespace ts {
             return resolveExternalModule(location, moduleReferenceLiteral.text, moduleNotFoundError, moduleReferenceLiteral);
         }
 
+        //NOTES
+        /*
+        If it's not relative, we may get it as an ambient module: a symbol attached to "globals" with a quoted name.
+        Else, we look it up as a source file.
+        But we don't want to create an actual SourceFile, so we want to be more like an ambient module...
+        */
         function resolveExternalModule(location: Node, moduleReference: string, moduleNotFoundError: DiagnosticMessage, errorNode: Node): Symbol {
+            debugger;
             // Module names are escaped in our symbol table.  However, string literal values aren't.
             // Escape the name in the "require(...)" clause to ensure we find the right symbol.
             const moduleName = escapeIdentifier(moduleReference);
@@ -1355,7 +1362,8 @@ namespace ts {
 
             const isRelative = isExternalModuleNameRelative(moduleName);
             if (!isRelative) {
-                const symbol = getSymbol(globals, '"' + moduleName + '"', SymbolFlags.ValueModule);
+                const quotedName = '"' + moduleName + '"';
+                const symbol = getSymbol(globals, quotedName, SymbolFlags.ValueModule);
                 if (symbol) {
                     // merged symbol is module declaration symbol combined with all augmentations
                     return getMergedSymbol(symbol);
@@ -1363,6 +1371,17 @@ namespace ts {
             }
 
             const resolvedModule = getResolvedModule(getSourceFileOfNode(location), moduleReference);
+            if (resolvedModule.isPackageJson) {
+                Debug.assert(!isRelative);
+                const quotedName = '"' + moduleName + '"'; //duplicate code...
+                const newSymbol = createSymbol(SymbolFlags.ValueModule, quotedName);
+                //This is expected of module symbols
+                //TODO: just re-use a constant empty map...
+                newSymbol.exports = createMap<Symbol>();
+                globals[quotedName] = newSymbol;
+                return newSymbol;
+            }
+
             const sourceFile = resolvedModule && host.getSourceFile(resolvedModule.resolvedFileName);
             if (sourceFile) {
                 if (sourceFile.symbol) {

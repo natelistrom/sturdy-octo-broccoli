@@ -414,10 +414,12 @@ namespace ts {
             ((<ModuleDeclaration>node).name.kind === SyntaxKind.StringLiteral || isGlobalScopeAugmentation(<ModuleDeclaration>node));
     }
 
+    //modified this to also include package.json modules
     export function isShorthandAmbientModuleSymbol(moduleSymbol: Symbol): boolean {
-        return isShorthandAmbientModule(moduleSymbol.valueDeclaration);
+        return !moduleSymbol.valueDeclaration || isShorthandAmbientModule(moduleSymbol.valueDeclaration);
     }
 
+    //this is relevant to my interests
     function isShorthandAmbientModule(node: Node): boolean {
         // The only kind of module that can be missing a body is a shorthand ambient module.
         return node.kind === SyntaxKind.ModuleDeclaration && (!(<ModuleDeclaration>node).body);

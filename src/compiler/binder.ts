@@ -1380,6 +1380,7 @@ namespace ts {
             }
         }
 
+        //this may be relevant
         function bindModuleDeclaration(node: ModuleDeclaration) {
             setExportContextFlag(node);
             if (isAmbientModule(node)) {
