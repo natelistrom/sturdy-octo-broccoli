@@ -65,7 +65,7 @@
         "istanbul": "latest",
         "jake": "latest",
         "merge2": "latest",
-        "minimist": "1.1.1",
+        "minimist": "latest",
         "mkdirp": "latest",
         "mocha": "latest",
         "mocha-fivemat-progress-reporter": "latest",
