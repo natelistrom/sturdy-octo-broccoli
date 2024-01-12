@@ -64,6 +64,7 @@
         "into-stream": "latest",
         "istanbul": "latest",
         "jake": "latest",
+        "lodash": "4.17.20",
         "merge2": "latest",
         "minimist": "1.1.1",
         "mkdirp": "latest",
