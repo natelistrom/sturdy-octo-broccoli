@@ -711,6 +711,14 @@ task("clean", function () {
     jake.rmRf(builtDirectory);
 });
 
+var analyzerFile = path.join(builtLocalDirectory, "analyzer.js");
+var analyserSourceFile = "src/services/analyzer.ts";
+compileFile(analyzerFile, [analyserSourceFile], [builtLocalDirectory, analyserSourceFile].concat(servicesSources), []);
+
+desc("Builds analyzer");
+task("analyzer", [analyzerFile]);
+
+
 // Generate Markdown spec
 var word2mdJs = path.join(scriptsDirectory, "word2md.js");
 var word2mdTs = path.join(scriptsDirectory, "word2md.ts");
